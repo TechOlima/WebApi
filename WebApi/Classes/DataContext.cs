@@ -17,6 +17,11 @@ namespace WebApi.Classes
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<ProductType> ProductType { get; set; }
         public virtual DbSet<MaterialType> MaterialType { get; set; }
-
+        public virtual DbSet<Insert> Insert { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<Order_Product> Order_Product { get; set; }
+        public virtual DbSet<Photo> Photo { get; set; }
+        public virtual DbSet<State> State { get; set; }
+        public virtual DbSet<StoneType> StoneType { get; set; }
     }
 }

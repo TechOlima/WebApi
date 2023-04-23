@@ -28,7 +28,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Order.ToListAsync();
+            return await _context.Order.Include(i=> i.Order_Products).ThenInclude(p => p.Product).ToListAsync();
         }
 
         // GET: api/Orders/5
@@ -39,7 +39,8 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            var order = await _context.Order.FindAsync(id);
+            var order = await _context.Order.Include(i => i.Order_Products).ThenInclude(p=>p.Product)
+                .FirstOrDefaultAsync(i => i.OrderID == id);
 
             if (order == null)
             {

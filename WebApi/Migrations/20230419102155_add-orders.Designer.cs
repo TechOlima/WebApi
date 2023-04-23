@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Classes;
 
@@ -11,9 +12,10 @@ using WebApi.Classes;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230419102155_add-orders")]
+    partial class addorders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InsertID"), 1L, 1);
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
                     b.Property<int>("StoneTypeID")
@@ -148,11 +150,8 @@ namespace WebApi.Migrations
                     b.Property<bool?>("Is_Cover")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
-
-                    b.Property<string>("photoUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PhotoID");
 
@@ -259,19 +258,15 @@ namespace WebApi.Migrations
 
             modelBuilder.Entity("WebApi.Classes.Insert", b =>
                 {
-                    b.HasOne("WebApi.Classes.Product", "Product")
+                    b.HasOne("WebApi.Classes.Product", null)
                         .WithMany("Inserts")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductID");
 
                     b.HasOne("WebApi.Classes.StoneType", "StoneType")
                         .WithMany()
                         .HasForeignKey("StoneTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
 
                     b.Navigation("StoneType");
                 });
@@ -308,13 +303,9 @@ namespace WebApi.Migrations
 
             modelBuilder.Entity("WebApi.Classes.Photo", b =>
                 {
-                    b.HasOne("WebApi.Classes.Product", "Product")
+                    b.HasOne("WebApi.Classes.Product", null)
                         .WithMany("Photos")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
+                        .HasForeignKey("ProductID");
                 });
 
             modelBuilder.Entity("WebApi.Classes.Product", b =>

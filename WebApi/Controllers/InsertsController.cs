@@ -28,7 +28,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Insert.ToListAsync();
+            return await _context.Insert.Include(i => i.Product).Include(i => i.StoneType).ToListAsync();
         }
 
         // GET: api/Inserts/5
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            var insert = await _context.Insert.FindAsync(id);
+            var insert = await _context.Insert.Include(i => i.Product).Include(i => i.StoneType).FirstOrDefaultAsync(i => i.InsertID == id);
 
             if (insert == null)
             {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Classes;
 
@@ -11,9 +12,10 @@ using WebApi.Classes;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230419095308_products2")]
+    partial class products2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InsertID"), 1L, 1);
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
                     b.Property<int>("StoneTypeID")
@@ -68,75 +70,6 @@ namespace WebApi.Migrations
                     b.ToTable("MaterialType");
                 });
 
-            modelBuilder.Entity("WebApi.Classes.Order", b =>
-                {
-                    b.Property<int>("OrderID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"), 1L, 1);
-
-                    b.Property<string>("ClientEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeliveryAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeliveryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("StateID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("TotalSum")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderID");
-
-                    b.HasIndex("StateID");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("WebApi.Classes.Order_Product", b =>
-                {
-                    b.Property<int>("Order_ProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Order_ProductID"), 1L, 1);
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Order_ProductID");
-
-                    b.HasIndex("OrderID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("Order_Product");
-                });
-
             modelBuilder.Entity("WebApi.Classes.Photo", b =>
                 {
                     b.Property<int>("PhotoID")
@@ -148,11 +81,8 @@ namespace WebApi.Migrations
                     b.Property<bool?>("Is_Cover")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
-
-                    b.Property<string>("photoUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PhotoID");
 
@@ -225,22 +155,6 @@ namespace WebApi.Migrations
                     b.ToTable("ProductType");
                 });
 
-            modelBuilder.Entity("WebApi.Classes.State", b =>
-                {
-                    b.Property<int>("StateID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StateID"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StateID");
-
-                    b.ToTable("State");
-                });
-
             modelBuilder.Entity("WebApi.Classes.StoneType", b =>
                 {
                     b.Property<int>("StoneTypeID")
@@ -259,11 +173,9 @@ namespace WebApi.Migrations
 
             modelBuilder.Entity("WebApi.Classes.Insert", b =>
                 {
-                    b.HasOne("WebApi.Classes.Product", "Product")
+                    b.HasOne("WebApi.Classes.Product", null)
                         .WithMany("Inserts")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductID");
 
                     b.HasOne("WebApi.Classes.StoneType", "StoneType")
                         .WithMany()
@@ -271,50 +183,14 @@ namespace WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
-
                     b.Navigation("StoneType");
-                });
-
-            modelBuilder.Entity("WebApi.Classes.Order", b =>
-                {
-                    b.HasOne("WebApi.Classes.State", "State")
-                        .WithMany()
-                        .HasForeignKey("StateID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("State");
-                });
-
-            modelBuilder.Entity("WebApi.Classes.Order_Product", b =>
-                {
-                    b.HasOne("WebApi.Classes.Order", "Order")
-                        .WithMany("Order_Products")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Classes.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("WebApi.Classes.Photo", b =>
                 {
-                    b.HasOne("WebApi.Classes.Product", "Product")
+                    b.HasOne("WebApi.Classes.Product", null)
                         .WithMany("Photos")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
+                        .HasForeignKey("ProductID");
                 });
 
             modelBuilder.Entity("WebApi.Classes.Product", b =>
@@ -332,11 +208,6 @@ namespace WebApi.Migrations
                     b.Navigation("MaterialType");
 
                     b.Navigation("ProductType");
-                });
-
-            modelBuilder.Entity("WebApi.Classes.Order", b =>
-                {
-                    b.Navigation("Order_Products");
                 });
 
             modelBuilder.Entity("WebApi.Classes.Product", b =>

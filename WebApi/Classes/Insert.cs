@@ -9,5 +9,7 @@ namespace WebApi.Classes
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? Weight { get; set; }
         public StoneType StoneType { get; set; }
+        public Product Product { get; set; }
+
     }
 }

@@ -28,7 +28,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Photo.ToListAsync();
+            return await _context.Photo.Include(i => i.Product).ToListAsync();
         }
 
         // GET: api/Photos/5
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            var photo = await _context.Photo.FindAsync(id);
+            var photo = await _context.Photo.Include(i => i.Product).FirstOrDefaultAsync(i => i.PhotoID == id); ;
 
             if (photo == null)
             {

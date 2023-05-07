@@ -28,7 +28,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Order.Include(i=> i.Order_Products).ThenInclude(p => p.Product).ToListAsync();
+            return await _context.Order.Include(i => i.Order_Products).ThenInclude(p => p.Product).ToListAsync();            
         }
 
         // GET: api/Orders/5

@@ -28,7 +28,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Storage.ToListAsync();
+            return await _context.Storage.Include(i=> i.Product).ToListAsync();
         }
 
         // GET: api/Storages/5

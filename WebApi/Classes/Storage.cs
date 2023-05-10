@@ -12,14 +12,11 @@ namespace WebApi.Classes
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? SalePrice { get; set; }        
-        public Product Product { get; set; }
-
-        [DataType(DataType.DateTime)]
-        public DateTime? PurchaseDate { get; set; }
-
-        [DataType(DataType.DateTime)]
-        public DateTime? SaleDate { get; set; }
+        public Product Product { get; set; }        
         public Order? Order { get; set; }
+
+        public int? OrderID { get; set; }
         public Supply? Supply { get; set; }
+        public int? SupplyID { get; set; }
     }
 }

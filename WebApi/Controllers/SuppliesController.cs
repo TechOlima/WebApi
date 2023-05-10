@@ -28,7 +28,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Supply.Include(i => i.Supply_Products).ThenInclude(p => p.Product).ToListAsync();
+            return await _context.Supply.Include(i => i.Storages).ThenInclude(p => p.Product).ToListAsync();
         }
 
         // GET: api/Supplies/5
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            var supply = await _context.Supply.Include(i => i.Supply_Products).ThenInclude(p => p.Product).FirstOrDefaultAsync(i => i.SupplyID == id);
+            var supply = await _context.Supply.Include(i => i.Storages).ThenInclude(p => p.Product).FirstOrDefaultAsync(i => i.SupplyID == id);
 
             if (supply == null)
             {

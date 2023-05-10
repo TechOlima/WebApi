@@ -21,6 +21,6 @@ namespace WebApi.Classes
         [DataType(DataType.DateTime)]
         public DateTime? OrderDate { get; set; }
         public string? Note { get; set; }
-        public ICollection<Order_Product> Order_Products { get; set; }        
+        public ICollection<Storage> Storages { get; set; }        
     }
 }

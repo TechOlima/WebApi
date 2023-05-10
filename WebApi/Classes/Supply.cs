@@ -17,6 +17,6 @@ namespace WebApi.Classes
         public decimal? TotalSum { get; set; }
         public bool? IsReceived { get; set;}
         public string? Note { get; set; }
-        public ICollection<Supply_Product> Supply_Products { get; set; }        
+        public ICollection<Storage> Storages { get; set; }        
     }
 }

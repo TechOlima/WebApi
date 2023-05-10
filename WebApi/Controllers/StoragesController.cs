@@ -11,56 +11,55 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class StoragesController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public OrdersController(DataContext context)
+        public StoragesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Orders
+        // GET: api/Storages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
+        public async Task<ActionResult<IEnumerable<Storage>>> GetStorage()
         {
-          if (_context.Order == null)
+          if (_context.Storage == null)
           {
               return NotFound();
           }
-            return await _context.Order.Include(i => i.Storages).ThenInclude(p => p.Product).ToListAsync();            
+            return await _context.Storage.ToListAsync();
         }
 
-        // GET: api/Orders/5
+        // GET: api/Storages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<Storage>> GetStorage(int id)
         {
-          if (_context.Order == null)
+          if (_context.Storage == null)
           {
               return NotFound();
           }
-            var order = await _context.Order.Include(i => i.Storages).ThenInclude(p=>p.Product)
-                .FirstOrDefaultAsync(i => i.OrderID == id);
+            var storage = await _context.Storage.FindAsync(id);
 
-            if (order == null)
+            if (storage == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return storage;
         }
 
-        // PUT: api/Orders/5
+        // PUT: api/Storages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        public async Task<IActionResult> PutStorage(int id, Storage storage)
         {
-            if (id != order.OrderID)
+            if (id != storage.StorageID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(order).State = EntityState.Modified;
+            _context.Entry(storage).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +67,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrderExists(id))
+                if (!StorageExists(id))
                 {
                     return NotFound();
                 }
@@ -81,44 +80,44 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Orders
+        // POST: api/Storages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Storage>> PostStorage(Storage storage)
         {
-          if (_context.Order == null)
+          if (_context.Storage == null)
           {
-              return Problem("Entity set 'DataContext.Order'  is null.");
+              return Problem("Entity set 'DataContext.Storage'  is null.");
           }
-            _context.Order.Add(order);
+            _context.Storage.Add(storage);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOrder", new { id = order.OrderID }, order);
+            return CreatedAtAction("GetStorage", new { id = storage.StorageID }, storage);
         }
 
-        // DELETE: api/Orders/5
+        // DELETE: api/Storages/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeleteStorage(int id)
         {
-            if (_context.Order == null)
+            if (_context.Storage == null)
             {
                 return NotFound();
             }
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
+            var storage = await _context.Storage.FindAsync(id);
+            if (storage == null)
             {
                 return NotFound();
             }
 
-            _context.Order.Remove(order);
+            _context.Storage.Remove(storage);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool OrderExists(int id)
+        private bool StorageExists(int id)
         {
-            return (_context.Order?.Any(e => e.OrderID == id)).GetValueOrDefault();
+            return (_context.Storage?.Any(e => e.StorageID == id)).GetValueOrDefault();
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Classes;
+using WebApi.Classes.Operations;
 
 namespace WebApi.Controllers
 {
@@ -28,7 +29,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            return await _context.Insert.Include(i => i.Product).Include(i => i.StoneType).ToListAsync();
+            return await _context.Insert.ToListAsync();
         }
 
         // GET: api/Inserts/5
@@ -39,7 +40,7 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            var insert = await _context.Insert.Include(i => i.Product).Include(i => i.StoneType).FirstOrDefaultAsync(i => i.InsertID == id);
+            var insert = await _context.Insert.FirstOrDefaultAsync(i => i.InsertID == id);
 
             if (insert == null)
             {
@@ -52,14 +53,14 @@ namespace WebApi.Controllers
         // PUT: api/Inserts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInsert(int id, Insert insert)
+        public async Task<IActionResult> PutInsert(int id, InsertPut insert)
         {
             if (id != insert.InsertID)
             {
                 return BadRequest();
-            }
+            }            
 
-            _context.Entry(insert).State = EntityState.Modified;
+            _context.Entry(new Insert(insert, _context)).State = EntityState.Modified;
 
             try
             {
@@ -83,12 +84,14 @@ namespace WebApi.Controllers
         // POST: api/Inserts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Insert>> PostInsert(Insert insert)
+        public async Task<ActionResult<Insert>> PostInsert(InsertPost insertPost)
         {
           if (_context.Insert == null)
           {
               return Problem("Entity set 'DataContext.Insert'  is null.");
           }
+            var insert = new Insert(insertPost, _context);
+
             _context.Insert.Add(insert);
             await _context.SaveChangesAsync();
 

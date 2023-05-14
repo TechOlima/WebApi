@@ -28,6 +28,7 @@ namespace WebApi.Classes
         public virtual DbSet<StoneType> StoneType { get; set; }
         public virtual DbSet<Supply> Supply { get; set; }
         public virtual DbSet<Storage> Storage { get; set; }
+        public virtual DbSet<GenderType> GenderType { get; set; }
 
     }
 }

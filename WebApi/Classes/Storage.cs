@@ -11,7 +11,7 @@ namespace WebApi.Classes
         public decimal? PurchasePrice { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal? SalePrice { get; set; }        
+        public decimal? SalePrice { get; set; }
         public Product Product { get; set; }        
         public Order? Order { get; set; }
 

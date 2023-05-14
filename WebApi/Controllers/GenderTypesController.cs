@@ -11,55 +11,55 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PhotosController : ControllerBase
+    public class GenderTypesController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public PhotosController(DataContext context)
+        public GenderTypesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Photos
+        // GET: api/GenderTypes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Photo>>> GetPhoto()
+        public async Task<ActionResult<IEnumerable<GenderType>>> GetGenderType()
         {
-          if (_context.Photo == null)
+          if (_context.GenderType == null)
           {
               return NotFound();
           }
-            return await _context.Photo.ToListAsync();
+            return await _context.GenderType.ToListAsync();
         }
 
-        // GET: api/Photos/5
+        // GET: api/GenderTypes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Photo>> GetPhoto(int id)
+        public async Task<ActionResult<GenderType>> GetGenderType(int id)
         {
-          if (_context.Photo == null)
+          if (_context.GenderType == null)
           {
               return NotFound();
           }
-            var photo = await _context.Photo.FirstOrDefaultAsync(i => i.PhotoID == id); ;
+            var genderType = await _context.GenderType.FindAsync(id);
 
-            if (photo == null)
+            if (genderType == null)
             {
                 return NotFound();
             }
 
-            return photo;
+            return genderType;
         }
 
-        // PUT: api/Photos/5
+        // PUT: api/GenderTypes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPhoto(int id, Photo photo)
+        public async Task<IActionResult> PutGenderType(int id, GenderType genderType)
         {
-            if (id != photo.PhotoID)
+            if (id != genderType.GenderTypeID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(photo).State = EntityState.Modified;
+            _context.Entry(genderType).State = EntityState.Modified;
 
             try
             {
@@ -67,7 +67,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PhotoExists(id))
+                if (!GenderTypeExists(id))
                 {
                     return NotFound();
                 }
@@ -80,44 +80,44 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Photos
+        // POST: api/GenderTypes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Photo>> PostPhoto(Photo photo)
+        public async Task<ActionResult<GenderType>> PostGenderType(GenderType genderType)
         {
-          if (_context.Photo == null)
+          if (_context.GenderType == null)
           {
-              return Problem("Entity set 'DataContext.Photo'  is null.");
+              return Problem("Entity set 'DataContext.GenderType'  is null.");
           }
-            _context.Photo.Add(photo);
+            _context.GenderType.Add(genderType);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPhoto", new { id = photo.PhotoID }, photo);
+            return CreatedAtAction("GetGenderType", new { id = genderType.GenderTypeID }, genderType);
         }
 
-        // DELETE: api/Photos/5
+        // DELETE: api/GenderTypes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePhoto(int id)
+        public async Task<IActionResult> DeleteGenderType(int id)
         {
-            if (_context.Photo == null)
+            if (_context.GenderType == null)
             {
                 return NotFound();
             }
-            var photo = await _context.Photo.FindAsync(id);
-            if (photo == null)
+            var genderType = await _context.GenderType.FindAsync(id);
+            if (genderType == null)
             {
                 return NotFound();
             }
 
-            _context.Photo.Remove(photo);
+            _context.GenderType.Remove(genderType);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool PhotoExists(int id)
+        private bool GenderTypeExists(int id)
         {
-            return (_context.Photo?.Any(e => e.PhotoID == id)).GetValueOrDefault();
+            return (_context.GenderType?.Any(e => e.GenderTypeID == id)).GetValueOrDefault();
         }
     }
 }

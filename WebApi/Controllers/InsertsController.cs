@@ -23,24 +23,30 @@ namespace WebApi.Controllers
 
         // GET: api/Inserts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Insert>>> GetInsert()
+        public async Task<ActionResult<IEnumerable<InsertGet>>> GetInsert()
         {
           if (_context.Insert == null)
           {
               return NotFound();
           }
-            return await _context.Insert.ToListAsync();
+            return await _context.Insert
+                .Include(i => i.Product)
+                .Include(i => i.StoneType)
+                .Select(i=> new InsertGet(i)).ToListAsync();
         }
 
         // GET: api/Inserts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Insert>> GetInsert(int id)
+        public async Task<ActionResult<InsertGet>> GetInsert(int id)
         {
           if (_context.Insert == null)
           {
               return NotFound();
           }
-            var insert = await _context.Insert.FirstOrDefaultAsync(i => i.InsertID == id);
+            var insert = await _context.Insert
+                .Include(i=> i.Product)
+                .Include(i => i.StoneType)
+                .Where(i => i.InsertID == id).Select(i => new InsertGet(i)).FirstOrDefaultAsync();
 
             if (insert == null)
             {

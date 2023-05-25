@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Classes;
+using WebApi.Classes.Operations;
 
 namespace WebApi.Controllers
 {
@@ -22,24 +23,38 @@ namespace WebApi.Controllers
 
         // GET: api/Supplies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supply>>> GetSupply()
+        public async Task<ActionResult<IEnumerable<SupplyGet>>> GetSupply(DateTime? dateFrom, DateTime? dateTo)
         {
           if (_context.Supply == null)
           {
               return NotFound();
           }
-            return await _context.Supply.Include(i => i.Storages).ThenInclude(p => p.Product).ToListAsync();
+            return await _context.Supply
+                .Include(i => i.Storages).ThenInclude(p => p.Product)
+                .Where(i=>
+                (dateFrom > DateTime.MinValue && dateTo > DateTime.MinValue && i.ReceivingDate > dateFrom && i.ReceivingDate < dateTo) ||
+                (dateFrom > DateTime.MinValue && dateTo == DateTime.MinValue && i.ReceivingDate > dateFrom) ||
+                (dateFrom == DateTime.MinValue && dateTo > DateTime.MinValue && i.ReceivingDate < dateTo) ||
+                (dateFrom == DateTime.MinValue && dateTo == DateTime.MinValue) ||
+                (dateFrom == null && dateTo == null)
+                 )
+                .Select(i => new SupplyGet(i))
+                .ToListAsync();
         }
 
         // GET: api/Supplies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Supply>> GetSupply(int id)
+        public async Task<ActionResult<SupplyGet>> GetSupply(int id)
         {
           if (_context.Supply == null)
           {
               return NotFound();
           }
-            var supply = await _context.Supply.Include(i => i.Storages).ThenInclude(p => p.Product).FirstOrDefaultAsync(i => i.SupplyID == id);
+            var supply = await _context.Supply
+                .Include(i => i.Storages).ThenInclude(p => p.Product)
+                .Where(i => i.SupplyID == id)
+                .Select(i=> new SupplyGet(i))
+                .FirstOrDefaultAsync();
 
             if (supply == null)
             {
@@ -52,8 +67,10 @@ namespace WebApi.Controllers
         // PUT: api/Supplies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSupply(int id, Supply supply)
+        public async Task<IActionResult> PutSupply(int id, SupplyPut supplyPut)
         {
+            Supply supply = new Supply(supplyPut);
+
             if (id != supply.SupplyID)
             {
                 return BadRequest();
@@ -83,12 +100,14 @@ namespace WebApi.Controllers
         // POST: api/Supplies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Supply>> PostSupply(Supply supply)
+        public async Task<ActionResult<Supply>> PostSupply(SupplyPost supplyPost)
         {
+
           if (_context.Supply == null)
           {
               return Problem("Entity set 'DataContext.Supply'  is null.");
           }
+            Supply supply = new Supply(supplyPost);
             _context.Supply.Add(supply);
             await _context.SaveChangesAsync();
 
@@ -108,7 +127,10 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+            //удаляем связанных товары на складе
+            Storage[] storages = _context.Storage.Where(i => i.SupplyID == supply.SupplyID).ToArray();            
 
+            _context.Storage.RemoveRange(storages);
             _context.Supply.Remove(supply);
             await _context.SaveChangesAsync();
 

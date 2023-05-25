@@ -14,17 +14,44 @@ namespace WebApi.Controllers
     public class PhotosController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public PhotosController(DataContext context)
+        public PhotosController(DataContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
+
+        // Post: api/Photos/UploadImage
+        /*
+        [HttpPost]
+        public async Task<ActionResult<Photo>> PostPhoto([FromForm] int productID, [FromForm] IFormFile uploadedFile)
+        {
+            Photo photo = new Photo() { ProductID = productID };
+            _context.Photo.Add(photo);
+            await _context.SaveChangesAsync();
+
+            if (uploadedFile != null)
+            {
+                string content_path = photo.PhotoID.ToString() + "_" + uploadedFile.FileName;
+                string path = "/images/" + content_path;
+                using (var fileStream = new FileStream(_appEnvironment.ContentRootPath + path, FileMode.Create))
+                {
+                    uploadedFile.CopyTo(fileStream);
+                }                
+                photo.photoUrl = content_path;
+                await _context.SaveChangesAsync();
+                
+            }
+            return CreatedAtAction("GetPhoto", new { id = photo.PhotoID }, photo);
+        }
+        */
 
         // GET: api/Photos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Photo>>> GetPhoto()
         {
-          if (_context.Photo == null)
+            if (_context.Photo == null)
           {
               return NotFound();
           }
@@ -82,6 +109,7 @@ namespace WebApi.Controllers
 
         // POST: api/Photos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
         public async Task<ActionResult<Photo>> PostPhoto(Photo photo)
         {
@@ -94,7 +122,7 @@ namespace WebApi.Controllers
 
             return CreatedAtAction("GetPhoto", new { id = photo.PhotoID }, photo);
         }
-
+        
         // DELETE: api/Photos/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhoto(int id)

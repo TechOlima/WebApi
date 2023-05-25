@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Classes;
+using WebApi.Classes.Operations;
 
 namespace WebApi.Controllers
 {
@@ -22,13 +23,13 @@ namespace WebApi.Controllers
 
         // GET: api/Storages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Storage>>> GetStorage()
+        public async Task<ActionResult<IEnumerable<StorageGet>>> GetStorage()
         {
           if (_context.Storage == null)
           {
               return NotFound();
           }
-            return await _context.Storage.Include(i=> i.Product).ToListAsync();
+            return await _context.Storage.Include(i=> i.Product).Select(i=> new StorageGet(i)).ToListAsync();
         }
 
         // GET: api/Storages/5
@@ -39,7 +40,12 @@ namespace WebApi.Controllers
           {
               return NotFound();
           }
-            var storage = await _context.Storage.FindAsync(id);
+            var storage = await _context.Storage
+                .Include(i=> i.Order)
+                .Include(i=> i.Product)
+                .Include(i=> i.Supply)
+                .Where(i=> i.StorageID == id)
+                .FirstOrDefaultAsync();
 
             if (storage == null)
             {
@@ -52,8 +58,10 @@ namespace WebApi.Controllers
         // PUT: api/Storages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStorage(int id, Storage storage)
+        public async Task<IActionResult> PutStorage(int id, StoragePut storagePut)
         {
+            Storage storage = new Storage(storagePut);
+
             if (id != storage.StorageID)
             {
                 return BadRequest();
@@ -83,9 +91,10 @@ namespace WebApi.Controllers
         // POST: api/Storages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Storage>> PostStorage(Storage storage)
+        public async Task<ActionResult<Storage>> PostStorage(StoragePost storagePost)
         {
-          if (_context.Storage == null)
+            Storage storage = new Storage(storagePost);
+            if (_context.Storage == null)
           {
               return Problem("Entity set 'DataContext.Storage'  is null.");
           }

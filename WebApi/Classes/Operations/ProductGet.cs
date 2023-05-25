@@ -2,9 +2,10 @@
 {
     public class ProductGet : ProductPost
     {
-        public int ProductID { get; set; }
+        public int ProductID { get; set; }        
         public ICollection<Photo>? Photos { get; set; }
-        public ICollection<InsertPut>? Inserts { get; set; }
+        public ICollection<InsertPut>? Inserts { get; set; }        
+        public int? StorageCount { get; set; }        
 
         public ProductGet(Product product)
         {
@@ -20,6 +21,9 @@
             this.Is_Deleted = product.Is_Deleted;
             this.Photos = product.Photos;
             this.Inserts = product?.Inserts?.Select(i=> new InsertPut(i)).ToList();
+            this.StorageCount = product?.Storages?.Count(i=> i.OrderID == null);
+            this.VK_ID = product?.VK_ID;
         }
     }
+       
 }

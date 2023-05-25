@@ -35,6 +35,8 @@ namespace WebApi.Controllers
                 .Include(i => i.ProductType)
                 .Include(i => i.MaterialType)
                 .Include(i=> i.GenderType)
+                .Include(i=> i.Storages)
+                .Include(i => i.Photos)
                 .Where(i => String.IsNullOrEmpty(i.Name) ||
                     String.IsNullOrEmpty(SearchPattern) ||
                     (!String.IsNullOrEmpty(SearchPattern) && i.Name.ToLower().Contains(SearchPattern.ToLower())))                
@@ -56,6 +58,7 @@ namespace WebApi.Controllers
                 .Include(i => i.Inserts).ThenInclude(i => i.StoneType)
                 .Include(i => i.Photos)
                 .Include(i => i.GenderType)
+                .Include(i => i.Storages)
                 .Where(i => i.ProductID == id)
                 .Select(i => new ProductGet(i))
                 .FirstOrDefault();            

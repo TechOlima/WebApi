@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Classes;
+using WebApi.Classes.Operations;
 
 namespace WebApi.Controllers
 {
@@ -22,25 +23,36 @@ namespace WebApi.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
+        public async Task<ActionResult<IEnumerable<OrderGet>>> GetOrder(string? SearchPattern)
         {
           if (_context.Order == null)
           {
               return NotFound();
           }
-            return await _context.Order.Include(i => i.Storages).ThenInclude(p => p.Product).ToListAsync();            
+            return await _context.Order
+                .Include(i=> i.State)
+                .Include(i => i.Storages)
+                .ThenInclude(p => p.Product)
+                .Where(i => String.IsNullOrEmpty(i.ClientName) ||
+                    String.IsNullOrEmpty(SearchPattern) ||
+                    (!String.IsNullOrEmpty(SearchPattern) && i.ClientName.ToLower().Contains(SearchPattern.ToLower())))
+                .Select(i=> new OrderGet(i))
+                .ToListAsync();            
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<OrderGet>> GetOrder(int id)
         {
           if (_context.Order == null)
           {
               return NotFound();
           }
-            var order = await _context.Order.Include(i => i.Storages).ThenInclude(p=>p.Product)
-                .FirstOrDefaultAsync(i => i.OrderID == id);
+            var order = new OrderGet(await _context.Order
+                .Include(i => i.State)
+                .Include(i => i.Storages)
+                .ThenInclude(p=>p.Product)                
+                .FirstOrDefaultAsync(i => i.OrderID == id));
 
             if (order == null)
             {
@@ -53,8 +65,10 @@ namespace WebApi.Controllers
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        public async Task<IActionResult> PutOrder(int id, OrderPut orderPut)
         {
+            Order order= new Order(orderPut, _context);
+
             if (id != order.OrderID)
             {
                 return BadRequest();
@@ -84,9 +98,10 @@ namespace WebApi.Controllers
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Order>> PostOrder(OrderPost orderPost)
         {
-          if (_context.Order == null)
+            Order order = new Order(orderPost, _context);
+            if (_context.Order == null)
           {
               return Problem("Entity set 'DataContext.Order'  is null.");
           }
@@ -109,7 +124,12 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+            //удаляем связанных товары на складе
+            Storage[] storages = _context.Storage.Where(i => i.OrderID == order.OrderID).ToArray();
 
+            foreach (Storage storage in storages) storage.OrderID = null;
+
+            _context.Storage.UpdateRange(storages);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
 

@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "WebApi20230507133600",
+      "defaultValue": "WebApi-V2-20230520120343",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

@@ -15,8 +15,10 @@ namespace WebApi.Classes
         public string? Description { get; set; }
         public GenderType? GenderType { get; set; }
         public bool? Is_Deleted { get; set; }
+        public int? VK_ID { get; set; }
         public ICollection<Photo>? Photos { get; set; }
         public ICollection<Insert>? Inserts { get; set; }
+        public ICollection<Storage>? Storages { get; set; }
 
         public Product()
         {
@@ -35,6 +37,7 @@ namespace WebApi.Classes
             this.Description = productPut.Description;
             this.GenderType = _context.GenderType.FirstOrDefault(i => i.Name == productPut.GenderType);
             this.Is_Deleted = productPut.Is_Deleted;
+            this.VK_ID = productPut.VK_ID;
         }
         public Product(ProductPost productPost, DataContext _context)
         {            
@@ -47,6 +50,7 @@ namespace WebApi.Classes
             this.Description = productPost.Description;
             this.GenderType = _context.GenderType.FirstOrDefault(i => i.Name == productPost.GenderType);
             this.Is_Deleted = productPost.Is_Deleted;
+            this.VK_ID= productPost.VK_ID;
         }
     }
 }

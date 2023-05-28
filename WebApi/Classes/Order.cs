@@ -21,6 +21,17 @@ namespace WebApi.Classes
         public string? Note { get; set; }
         public ICollection<Storage> Storages { get; set; }
 
+        //поля для стандартизированного адреса
+        public string? DeliveryAddressStd { get; set; }
+        public string? StreetWithType { get; set; }
+        public string? House { get; set; }
+        public string? Block { get; set; }
+        public string? Entrance { get; set; }
+        public string? Floor { get; set; }
+        public string? Flat { get; set; }
+        public string? QC { get; set; }
+
+
         public Order()
         {
 
@@ -37,6 +48,15 @@ namespace WebApi.Classes
             this.DeliveryDate = orderPut.DeliveryDate;
             this.OrderDate = orderPut.OrderDate;
             this.Note = orderPut.Note;
+            //поля стандартизированного адреса
+            this.DeliveryAddressStd = orderPut.DeliveryAddressStd;
+            this.StreetWithType = orderPut.StreetWithType;
+            this.House = orderPut.House;
+            this.Block = orderPut.Block;
+            this.Entrance = orderPut.Entrance;
+            this.Floor = orderPut.Floor;
+            this.Flat = orderPut.Flat;
+            this.QC = orderPut.QC;
         }
 
         public Order(OrderPost orderPost, DataContext _context)
@@ -51,6 +71,15 @@ namespace WebApi.Classes
             this.DeliveryDate = orderPost.DeliveryDate;
             this.OrderDate = DateTime.Now;
             this.Note = orderPost.Note;
+            //поля стандартизированного адреса
+            this.DeliveryAddressStd = orderPost.DeliveryAddressStd;
+            this.StreetWithType = orderPost.StreetWithType;
+            this.House = orderPost.House;
+            this.Block = orderPost.Block;
+            this.Entrance = orderPost.Entrance;
+            this.Floor = orderPost.Floor;
+            this.Flat = orderPost.Flat;
+            this.QC = orderPost.QC;
         }
     }
 }

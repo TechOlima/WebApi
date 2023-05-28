@@ -8,5 +8,7 @@ namespace WebApi.Classes.Operations
 
         [DataType(DataType.DateTime)]
         public DateTime? OrderDate { get; set; }
+
+        
     }
 }

@@ -24,6 +24,15 @@
             this.Storages = order.Storages.Select(i => new StorageGet(i)).ToList();
             this.TotalSum = order.Storages.Sum(i => i.PurchasePrice);
             this.ProductCount = order.Storages.Count();
+            //поля для стандартизированного адреса
+            this.DeliveryAddressStd=order.DeliveryAddressStd;
+            this.StreetWithType=order.StreetWithType;
+            this.House= order.House;
+            this.Block= order.Block;
+            this.Entrance= order.Entrance;
+            this.Floor= order.Floor;
+            this.Flat= order.Flat;
+            this.QC= order.QC;
         }
     }
 }

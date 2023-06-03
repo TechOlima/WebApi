@@ -33,6 +33,8 @@
             this.Floor= order.Floor;
             this.Flat= order.Flat;
             this.QC= order.QC;
+            this.EmailNotification= order.EmailNotification;
+            this.SmsNotification= order.SmsNotification;
         }
     }
 }

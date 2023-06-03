@@ -24,5 +24,9 @@ namespace WebApi.Classes.Operations
         public string? Floor { get; set; }
         public string? Flat { get; set; }
         public string? QC { get; set; }
+        
+        //поля для уведомлений
+        public bool? EmailNotification { get; set; }
+        public bool? SmsNotification { get; set; }
     }
 }

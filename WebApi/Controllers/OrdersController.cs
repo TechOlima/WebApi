@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WebApi.Classes;
 using WebApi.Classes.Operations;
 
@@ -15,10 +17,14 @@ namespace WebApi.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguration Configuration;
+        private readonly string QuenueServiceUrl;
 
-        public OrdersController(DataContext context)
+        public OrdersController(DataContext context, IConfiguration configRoot)
         {
             _context = context;
+            Configuration = configRoot;
+            QuenueServiceUrl = Configuration.GetValue<string>("QuenueServiceUrl");
         }
 
         // GET: api/Orders
@@ -95,6 +101,29 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchOrder(int id, string state)
+        {
+            Order? order = _context.Order.FirstOrDefault(i=> i.OrderID == id);
+            State? newstate = _context.State.FirstOrDefault(i=> i.Name.ToLower() == state.ToLower());
+
+            if (order == null || newstate == null) return NotFound(); 
+            else
+            {
+                order.State = newstate;
+                _context.Entry(order).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                //отправка сообщений в очередь
+                if (order.SmsNotification == true && order.ClientPhone != null)                
+                    await SendNotification("sms", order.ClientPhone, "Статус заказа изменился на: " + order.State.Name); 
+                
+                if (order.EmailNotification == true && order.ClientEmail != null)                
+                    await SendNotification("email", order.ClientEmail, "Статус заказа изменился на: " + order.State.Name);                    
+                
+                return NoContent();
+            }
+        }
+
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -107,6 +136,13 @@ namespace WebApi.Controllers
           }
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
+
+            //отправка сообщений в очередь
+            if (order.SmsNotification == true && order.ClientPhone != null)
+                await SendNotification("sms", order.ClientPhone, "Создан новый заказ:" + order.OrderID);
+
+            if (order.EmailNotification == true && order.ClientEmail != null)
+                await SendNotification("email", order.ClientEmail, "Создан новый заказ:" + order.OrderID);
 
             return CreatedAtAction("GetOrder", new { id = order.OrderID }, order);
         }
@@ -134,6 +170,34 @@ namespace WebApi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task<bool> SendNotification(string queueName, string adress, string mes)
+        {
+            HttpClient httpClient = new HttpClient();
+            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, QuenueServiceUrl + "/api/Azure/InsertMessage");
+
+            string message = JsonConvert.SerializeObject(new Notification()
+            {
+                Adress = adress,
+                Message = mes
+            }, Newtonsoft.Json.Formatting.Indented);            
+
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                ["queueName"] = queueName,
+                ["message"] = message
+            };
+            // создаем объект HttpContent
+            HttpContent contentForm = new FormUrlEncodedContent(data);
+            request.Content = contentForm;
+            using HttpResponseMessage response = await httpClient.SendAsync(request);
+
+            string requestStr = response.RequestMessage.ToString();
+            var responseStr = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode) return true;
+            else return false;
         }
 
         private bool OrderExists(int id)

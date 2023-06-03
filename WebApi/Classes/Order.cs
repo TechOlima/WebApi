@@ -31,6 +31,9 @@ namespace WebApi.Classes
         public string? Flat { get; set; }
         public string? QC { get; set; }
 
+        //поля для уведомлений
+        public bool? EmailNotification { get; set; }
+        public bool? SmsNotification { get; set; }
 
         public Order()
         {
@@ -57,6 +60,8 @@ namespace WebApi.Classes
             this.Floor = orderPut.Floor;
             this.Flat = orderPut.Flat;
             this.QC = orderPut.QC;
+            this.SmsNotification = orderPut.SmsNotification;
+            this.EmailNotification = orderPut.EmailNotification;
         }
 
         public Order(OrderPost orderPost, DataContext _context)
@@ -80,6 +85,8 @@ namespace WebApi.Classes
             this.Floor = orderPost.Floor;
             this.Flat = orderPost.Flat;
             this.QC = orderPost.QC;
+            this.SmsNotification = orderPost.SmsNotification;
+            this.EmailNotification = orderPost.EmailNotification;
         }
     }
 }

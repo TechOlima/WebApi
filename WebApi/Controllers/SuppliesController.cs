@@ -30,7 +30,7 @@ namespace WebApi.Controllers
               return NotFound();
           }
             return await _context.Supply
-                .Include(i => i.Storages).ThenInclude(p => p.Product)
+                .Include(i => i.SupplyProducts).ThenInclude(p => p.Product)
                 .Where(i=>
                 (dateFrom > DateTime.MinValue && dateTo > DateTime.MinValue && i.ReceivingDate > dateFrom && i.ReceivingDate < dateTo) ||
                 (dateFrom > DateTime.MinValue && dateTo == DateTime.MinValue && i.ReceivingDate > dateFrom) ||
@@ -51,7 +51,7 @@ namespace WebApi.Controllers
               return NotFound();
           }
             var supply = await _context.Supply
-                .Include(i => i.Storages).ThenInclude(p => p.Product)
+                .Include(i => i.SupplyProducts).ThenInclude(p => p.Product)
                 .Where(i => i.SupplyID == id)
                 .Select(i=> new SupplyGet(i))
                 .FirstOrDefaultAsync();
@@ -127,10 +127,6 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            //удаляем связанных товары на складе
-            Storage[] storages = _context.Storage.Where(i => i.SupplyID == supply.SupplyID).ToArray();            
-
-            _context.Storage.RemoveRange(storages);
             _context.Supply.Remove(supply);
             await _context.SaveChangesAsync();
 

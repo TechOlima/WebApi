@@ -37,7 +37,7 @@ namespace WebApi.Controllers
           }
             return await _context.Order
                 .Include(i=> i.State)
-                .Include(i => i.Storages)
+                .Include(i => i.OrderProducts)
                 .ThenInclude(p => p.Product)
                 .Where(i => String.IsNullOrEmpty(i.ClientName) ||
                     String.IsNullOrEmpty(SearchPattern) ||
@@ -56,7 +56,7 @@ namespace WebApi.Controllers
           }
             var order = new OrderGet(await _context.Order
                 .Include(i => i.State)
-                .Include(i => i.Storages)
+                .Include(i => i.OrderProducts)
                 .ThenInclude(p=>p.Product)                
                 .FirstOrDefaultAsync(i => i.OrderID == id));
 
@@ -159,13 +159,7 @@ namespace WebApi.Controllers
             if (order == null)
             {
                 return NotFound();
-            }
-            //удаляем связанных товары на складе
-            Storage[] storages = _context.Storage.Where(i => i.OrderID == order.OrderID).ToArray();
-
-            foreach (Storage storage in storages) storage.OrderID = null;
-
-            _context.Storage.UpdateRange(storages);
+            }            
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
 

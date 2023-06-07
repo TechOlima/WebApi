@@ -34,8 +34,7 @@ namespace WebApi.Controllers
             return await _context.Product
                 .Include(i => i.ProductType)
                 .Include(i => i.MaterialType)
-                .Include(i=> i.GenderType)
-                .Include(i=> i.Storages)
+                .Include(i=> i.GenderType)                
                 .Include(i => i.Photos)
                 .Where(i => String.IsNullOrEmpty(i.Name) ||
                     String.IsNullOrEmpty(SearchPattern) ||
@@ -57,8 +56,7 @@ namespace WebApi.Controllers
                 .Include(i => i.MaterialType)
                 .Include(i => i.Inserts).ThenInclude(i => i.StoneType)
                 .Include(i => i.Photos)
-                .Include(i => i.GenderType)
-                .Include(i => i.Storages)
+                .Include(i => i.GenderType)                
                 .Where(i => i.ProductID == id)
                 .Select(i => new ProductGet(i))
                 .FirstOrDefault();            

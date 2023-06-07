@@ -15,7 +15,7 @@ namespace WebApi.Classes
         public DateTime? ReceivingDate { get; set; }        
         public bool? IsReceived { get; set;}
         public string? Note { get; set; }
-        public ICollection<Storage> Storages { get; set; }
+        public ICollection<Supply_Product>? SupplyProducts { get; set; }
 
         public Supply()
         {

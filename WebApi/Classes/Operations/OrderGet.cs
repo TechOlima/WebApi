@@ -4,7 +4,7 @@
     {
         public int? ProductCount { get; set; }
         public decimal? TotalSum { get; set; }
-        public ICollection<StorageGet> Storages { get; set; }
+        public ICollection<Order_ProductGet>? OrderProducts { get; set; }
 
         public OrderGet()
         {
@@ -21,9 +21,9 @@
             this.DeliveryAddress = order.DeliveryAddress;
             this.DeliveryDate = order.DeliveryDate;
             this.State = order?.State?.Name;
-            this.Storages = order.Storages.Select(i => new StorageGet(i)).ToList();
-            this.TotalSum = order.Storages.Sum(i => i.PurchasePrice);
-            this.ProductCount = order.Storages.Count();
+            this.OrderProducts = order?.OrderProducts?.Select(i=> new Order_ProductGet(i)).ToList();
+            this.TotalSum = order?.OrderProducts.Sum(i => i.Quantity * i.Product?.SalePrice);
+            this.ProductCount = order.OrderProducts.Sum(i=> i.Quantity);
             //поля для стандартизированного адреса
             this.DeliveryAddressStd=order.DeliveryAddressStd;
             this.StreetWithType=order.StreetWithType;

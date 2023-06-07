@@ -19,7 +19,7 @@ namespace WebApi.Classes
         [DataType(DataType.DateTime)]
         public DateTime? OrderDate { get; set; }
         public string? Note { get; set; }
-        public ICollection<Storage> Storages { get; set; }
+        public ICollection<Order_Product> OrderProducts { get; set; }
 
         //поля для стандартизированного адреса
         public string? DeliveryAddressStd { get; set; }

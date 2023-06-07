@@ -9,8 +9,8 @@
         public string? VendorCode { get; set; }
         public int? Size { get; set; }
         public string? Description { get; set; }
-        public string? GenderType { get; set; }
-        public bool? Is_Deleted { get; set; }
-        public int? VK_ID { get; set; }
+        public string? GenderType { get; set; }        
+        public decimal? PurchasePrice { get; set; }        
+        public decimal? SalePrice { get; set; }        
     }
 }

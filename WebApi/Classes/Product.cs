@@ -10,16 +10,21 @@ namespace WebApi.Classes
         public MaterialType? MaterialType { get; set; }
         public string? Name { get; set; }
         public string? Equipment { get; set; }
-        public string? VendorCode { get; set; }
+        public string? VendorCode { get; set; }        
+        public int? Amounth { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? PurchasePrice { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? SalePrice { get; set; }
         public int? Size { get; set; }        
         public string? Description { get; set; }
         public GenderType? GenderType { get; set; }
         public bool? Is_Deleted { get; set; }
         public int? VK_ID { get; set; }
         public ICollection<Photo>? Photos { get; set; }
-        public ICollection<Insert>? Inserts { get; set; }
-        public ICollection<Storage>? Storages { get; set; }
-
+        public ICollection<Insert>? Inserts { get; set; } 
         public Product()
         {
 
@@ -48,9 +53,7 @@ namespace WebApi.Classes
             this.VendorCode = productPost.VendorCode;
             this.Size = productPost.Size;
             this.Description = productPost.Description;
-            this.GenderType = _context.GenderType.FirstOrDefault(i => i.Name == productPost.GenderType);
-            this.Is_Deleted = productPost.Is_Deleted;
-            this.VK_ID= productPost.VK_ID;
+            this.GenderType = _context.GenderType.FirstOrDefault(i => i.Name == productPost.GenderType);            
         }
     }
 }

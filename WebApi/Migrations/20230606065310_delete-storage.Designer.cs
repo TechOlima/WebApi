@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Classes;
 
@@ -11,13 +12,14 @@ using WebApi.Classes;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230606065310_delete-storage")]
+    partial class deletestorage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -163,10 +165,10 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Order_ProductID"), 1L, 1);
 
-                    b.Property<int?>("OrderID")
+                    b.Property<int>("OrderID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductID")
+                    b.Property<int>("ProductID")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -292,7 +294,6 @@ namespace WebApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StateID"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StateID");
@@ -349,13 +350,13 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Supply_ProductID"), 1L, 1);
 
-                    b.Property<int?>("ProductID")
+                    b.Property<int>("ProductID")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SupplyID")
+                    b.Property<int>("SupplyID")
                         .HasColumnType("int");
 
                     b.HasKey("Supply_ProductID");
@@ -401,11 +402,15 @@ namespace WebApi.Migrations
                 {
                     b.HasOne("WebApi.Classes.Order", "Order")
                         .WithMany("OrderProducts")
-                        .HasForeignKey("OrderID");
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WebApi.Classes.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductID");
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
 
@@ -446,11 +451,15 @@ namespace WebApi.Migrations
                 {
                     b.HasOne("WebApi.Classes.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductID");
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WebApi.Classes.Supply", "Supply")
                         .WithMany("SupplyProducts")
-                        .HasForeignKey("SupplyID");
+                        .HasForeignKey("SupplyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StatesController : ControllerBase
     {
         private readonly DataContext _context;
@@ -22,6 +24,7 @@ namespace WebApi.Controllers
 
         // GET: api/States
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<State>>> GetState()
         {
           if (_context.State == null)
@@ -33,6 +36,7 @@ namespace WebApi.Controllers
 
         // GET: api/States/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<State>> GetState(int id)
         {
           if (_context.State == null)

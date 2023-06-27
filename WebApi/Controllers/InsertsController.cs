@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InsertsController : ControllerBase
     {
         private readonly DataContext _context;
@@ -23,6 +25,7 @@ namespace WebApi.Controllers
 
         // GET: api/Inserts
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<InsertGet>>> GetInsert()
         {
           if (_context.Insert == null)
@@ -37,6 +40,7 @@ namespace WebApi.Controllers
 
         // GET: api/Inserts/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<InsertGet>> GetInsert(int id)
         {
           if (_context.Insert == null)

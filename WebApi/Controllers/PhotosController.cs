@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PhotosController : ControllerBase
     {
         private readonly DataContext _context;
@@ -49,6 +51,7 @@ namespace WebApi.Controllers
 
         // GET: api/Photos
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Photo>>> GetPhoto()
         {
             if (_context.Photo == null)
@@ -60,6 +63,7 @@ namespace WebApi.Controllers
 
         // GET: api/Photos/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Photo>> GetPhoto(int id)
         {
           if (_context.Photo == null)

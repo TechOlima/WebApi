@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly DataContext _context;
@@ -29,6 +31,7 @@ namespace WebApi.Controllers
 
         // GET: api/Orders
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<OrderGet>>> GetOrder(string? SearchPattern)
         {
           if (_context.Order == null)
@@ -48,6 +51,7 @@ namespace WebApi.Controllers
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<OrderGet>> GetOrder(int id)
         {
           if (_context.Order == null)

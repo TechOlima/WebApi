@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly DataContext _context;
@@ -24,6 +26,7 @@ namespace WebApi.Controllers
 
         // GET: api/Products
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductGet>>> GetProduct(string? SearchPattern)
         {
             if (_context.Product == null)
@@ -45,6 +48,7 @@ namespace WebApi.Controllers
 
         // GET: api/Products/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<ProductGet> GetProduct(int id)
         {
           if (_context.Product == null)

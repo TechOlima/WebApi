@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StoneTypesController : ControllerBase
     {
         private readonly DataContext _context;
@@ -22,6 +24,7 @@ namespace WebApi.Controllers
 
         // GET: api/StoneTypes
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<StoneType>>> GetStoneType()
         {
           if (_context.StoneType == null)
@@ -33,6 +36,7 @@ namespace WebApi.Controllers
 
         // GET: api/StoneTypes/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<StoneType>> GetStoneType(int id)
         {
           if (_context.StoneType == null)

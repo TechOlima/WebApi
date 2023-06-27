@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MaterialTypesController : ControllerBase
     {
         private readonly DataContext _context;
@@ -22,6 +24,7 @@ namespace WebApi.Controllers
 
         // GET: api/MaterialTypes
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<MaterialType>>> GetMaterialType()
         {
           if (_context.MaterialType == null)
@@ -33,6 +36,7 @@ namespace WebApi.Controllers
 
         // GET: api/MaterialTypes/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<MaterialType>> GetMaterialType(int id)
         {
           if (_context.MaterialType == null)

@@ -41,7 +41,9 @@ namespace WebApi.Controllers
                 .Include(i => i.Photos)
                 .Where(i => String.IsNullOrEmpty(i.Name) ||
                     String.IsNullOrEmpty(SearchPattern) ||
-                    (!String.IsNullOrEmpty(SearchPattern) && i.Name.ToLower().Contains(SearchPattern.ToLower())))                
+                    (!String.IsNullOrEmpty(SearchPattern) && i.Name.ToLower().Contains(SearchPattern.ToLower())) ||
+                    (!String.IsNullOrEmpty(SearchPattern) && !String.IsNullOrEmpty(i.VendorCode) && i.VendorCode.ToLower().Contains(SearchPattern.ToLower()))
+                    )                
                 .Select(i => new ProductGet(i))
                 .ToListAsync();
         }

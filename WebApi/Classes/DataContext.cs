@@ -6,7 +6,7 @@ namespace WebApi.Classes
     {
         private string _conString = @"Data Source=LAPTOP-14OU6DIV\SQLEXPRESS;Initial Catalog=Olima;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;";
 
-        //private string _prodConString = @"Server=tcp:olimaserver.database.windows.net,1433;Initial Catalog=olima-v4;Persist Security Info=False;User ID=olimaadmin;Password='testadmin#01020305';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        //private string _prodConString = @"Server=tcp:olimaserver.database.windows.net,1433;Initial Catalog=olima-v5;Persist Security Info=False;User ID=olimaadmin;Password='testadmin#01020305';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

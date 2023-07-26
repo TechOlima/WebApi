@@ -44,7 +44,9 @@ namespace WebApi.Controllers
                 .ThenInclude(p => p.Product)
                 .Where(i => String.IsNullOrEmpty(i.ClientName) ||
                     String.IsNullOrEmpty(SearchPattern) ||
-                    (!String.IsNullOrEmpty(SearchPattern) && i.ClientName.ToLower().Contains(SearchPattern.ToLower())))
+                    (!String.IsNullOrEmpty(SearchPattern) && i.ClientName.ToLower().Contains(SearchPattern.ToLower())) ||
+                    (!String.IsNullOrEmpty(SearchPattern) && i.OrderID.ToString().ToLower().Contains(SearchPattern.ToLower()))
+                    )
                 .Select(i=> new OrderGet(i))
                 .ToListAsync();            
         }

@@ -28,17 +28,16 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<SupplyGet>>> GetSupply(DateTime? dateFrom, DateTime? dateTo)
         {
-          if (_context.Supply == null)
-          {
-              return NotFound();
-          }
+            if (_context.Supply == null)
+            {
+                return NotFound();
+            }
             return await _context.Supply
                 .Include(i => i.SupplyProducts).ThenInclude(p => p.Product)
-                .Where(i=>
-                (dateFrom > DateTime.MinValue && dateTo > DateTime.MinValue && i.ReceivingDate > dateFrom && i.ReceivingDate < dateTo) ||
-                (dateFrom > DateTime.MinValue && dateTo == DateTime.MinValue && i.ReceivingDate > dateFrom) ||
-                (dateFrom == DateTime.MinValue && dateTo > DateTime.MinValue && i.ReceivingDate < dateTo) ||
-                (dateFrom == DateTime.MinValue && dateTo == DateTime.MinValue) ||
+                .Where(i =>
+                (dateFrom > DateTime.MinValue && dateTo > DateTime.MinValue && i.ShippingDate > dateFrom && i.ShippingDate < dateTo) ||
+                (dateFrom > DateTime.MinValue && (dateTo == DateTime.MinValue || dateTo == null) && i.ShippingDate > dateFrom) ||
+                ((dateFrom == DateTime.MinValue || dateFrom == null) && dateTo > DateTime.MinValue && i.ShippingDate < dateTo) ||                
                 (dateFrom == null && dateTo == null)
                  )
                 .Select(i => new SupplyGet(i))

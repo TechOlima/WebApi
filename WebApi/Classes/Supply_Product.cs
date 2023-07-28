@@ -30,5 +30,10 @@ namespace WebApi.Classes
             this.ProductID = Supply_ProductPost.ProductID;
             this.Quantity = Supply_ProductPost.Quantity;
         }
+        public Supply_Product(Supply_Supply_ProductPost Supply_Supply_ProductPost)
+        {            
+            this.ProductID = Supply_Supply_ProductPost.ProductID;
+            this.Quantity = Supply_Supply_ProductPost.Quantity;
+        }        
     }
 }

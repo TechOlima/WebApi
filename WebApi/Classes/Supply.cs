@@ -37,6 +37,7 @@ namespace WebApi.Classes
             this.ReceivingDate = supplyPost.ReceivingDate;            
             this.IsReceived = supplyPost.IsReceived;
             this.Note = supplyPost.Note;
+            this.SupplyProducts = supplyPost.SupplyProducts.Select(i => new Supply_Product(i)).ToList();
         }
     }
 }

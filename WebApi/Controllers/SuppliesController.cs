@@ -125,7 +125,10 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            var supply = await _context.Supply.FindAsync(id);
+            var supply = await _context.Supply.
+                Include(i => i.SupplyProducts)                
+                .FirstOrDefaultAsync(i=> i.SupplyID==id);
+
             if (supply == null)
             {
                 return NotFound();

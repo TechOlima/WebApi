@@ -14,5 +14,7 @@ namespace WebApi.Classes.Operations
         [Column(TypeName = "decimal(18, 2)")]        
         public bool? IsReceived { get; set; }
         public string? Note { get; set; }
+
+        public ICollection<Supply_Supply_ProductPost> SupplyProducts { get; set; }
     }
 }

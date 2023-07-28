@@ -28,5 +28,7 @@ namespace WebApi.Classes.Operations
         //поля для уведомлений
         public bool? EmailNotification { get; set; }
         public bool? SmsNotification { get; set; }
+
+        public ICollection<Order_Order_ProductPost>? OrderProducts { get; set; }
     }
 }

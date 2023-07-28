@@ -144,12 +144,13 @@ namespace WebApi.Controllers
             await _context.SaveChangesAsync();
 
             //отправка сообщений в очередь
+            /*
             if (order.SmsNotification == true && order.ClientPhone != null)
                 await SendNotification("sms", order.ClientPhone, "Создан новый заказ:" + order.OrderID);
 
             if (order.EmailNotification == true && order.ClientEmail != null)
                 await SendNotification("email", order.ClientEmail, "Создан новый заказ:" + order.OrderID);
-
+            */
             return CreatedAtAction("GetOrder", new { id = order.OrderID }, order);
         }
 
@@ -161,7 +162,9 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            var order = await _context.Order.FindAsync(id);
+            var order = await _context.Order                
+                .Include(i => i.OrderProducts)                
+                .FirstOrDefaultAsync(i => i.OrderID == id); ;
             if (order == null)
             {
                 return NotFound();

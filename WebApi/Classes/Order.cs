@@ -87,6 +87,7 @@ namespace WebApi.Classes
             this.QC = orderPost.QC;
             this.SmsNotification = orderPost.SmsNotification;
             this.EmailNotification = orderPost.EmailNotification;
+            this.OrderProducts = orderPost.OrderProducts.Select(i=> new Order_Product(i)).ToList();
         }
     }
 }
